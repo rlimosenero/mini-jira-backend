@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 /**
  * Flat/denormalized like the original json-server "tickets" collection:
  * projectId and resourceId are plain string foreign keys rather than
@@ -32,6 +34,10 @@ public class Ticket {
     @Column(name = "project_id")
     private String projectId;
 
+    // nullable: a ticket may not be scheduled into a sprint yet (backlog)
+    @Column(name = "sprint_id")
+    private String sprintId;
+
     private int num;
 
     @NotBlank
@@ -50,4 +56,12 @@ public class Ticket {
 
     @Column(name = "resource_id")
     private String resourceId;
+
+    // nullable: not every ticket is estimated yet
+    @Column(name = "story_points")
+    private Integer storyPoints;
+
+    // set automatically when status transitions to "done"; used for velocity reporting
+    @Column(name = "completed_at")
+    private LocalDate completedAt;
 }

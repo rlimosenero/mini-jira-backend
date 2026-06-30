@@ -4,10 +4,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.minijira.model.Project;
 import com.minijira.model.Resource;
+import com.minijira.model.Sprint;
 import com.minijira.model.Ticket;
 import com.minijira.model.User;
 import com.minijira.repository.ProjectRepository;
 import com.minijira.repository.ResourceRepository;
+import com.minijira.repository.SprintRepository;
 import com.minijira.repository.TicketRepository;
 import com.minijira.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ public class DataSeeder implements CommandLineRunner {
     private final ResourceRepository resourceRepository;
     private final UserRepository userRepository;
     private final TicketRepository ticketRepository;
+    private final SprintRepository sprintRepository;
 
     private final ObjectMapper objectMapper;
 
@@ -56,6 +59,7 @@ public class DataSeeder implements CommandLineRunner {
             seedProjects(base + "projects.json");
             seedResources(base + "resources.json");
             seedUsers(base + "users.json");
+            seedSprints(base + "sprints.json");
             seedTickets(base + "tickets.json");
 
             System.out.println(base+"✅ Seed data loaded from external JSON files!");
@@ -79,6 +83,16 @@ public class DataSeeder implements CommandLineRunner {
     private void seedUsers(String filePath) throws Exception {
         List<User> list = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
         userRepository.saveAll(list);
+    }
+
+    private void seedSprints(String filePath) throws Exception {
+        File f = new File(filePath);
+        if (!f.exists()) {
+            System.out.println("No sprints.json found at " + filePath + " — skipping sprint seeding.");
+            return;
+        }
+        List<Sprint> list = objectMapper.readValue(f, new TypeReference<>() {});
+        sprintRepository.saveAll(list);
     }
 
     private void seedTickets(String filePath) throws Exception {

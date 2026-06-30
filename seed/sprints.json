@@ -1,0 +1,30 @@
+[
+  {
+    "id": "s1",
+    "projectId": "p1",
+    "name": "Sprint 1",
+    "startDate": "2026-06-02",
+    "endDate": "2026-06-15"
+  },
+  {
+    "id": "s2",
+    "projectId": "p1",
+    "name": "Sprint 2",
+    "startDate": "2026-06-16",
+    "endDate": "2026-06-29"
+  },
+  {
+    "id": "s3",
+    "projectId": "p1",
+    "name": "Sprint 3",
+    "startDate": "2026-06-30",
+    "endDate": "2026-07-13"
+  },
+  {
+    "id": "s4",
+    "projectId": "p2",
+    "name": "Sprint 4",
+    "startDate": "2026-06-16",
+    "endDate": "2026-06-29"
+  }
+]

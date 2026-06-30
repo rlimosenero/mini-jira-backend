@@ -15,5 +15,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 
     List<Ticket> findByStatus(String status);
 
+    List<Ticket> findBySprintId(String sprintId);
+
     int countByProjectId(String projectId);
 }

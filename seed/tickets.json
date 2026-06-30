@@ -2,71 +2,92 @@
   {
     "id": "t1",
     "projectId": "p1",
-    "assigneeId": 1,
+    "sprintId": "s1782817042519",
+    "num": 0,
     "title": "Set up project skeleton",
     "description": "Bootstrap repo, linting, CI.",
     "status": "done",
     "priority": "medium",
-    "reporterId": "r1782653437166"
+    "resourceId": "e1n7DJ8ThpI",
+    "storyPoints": 5,
+    "completedAt": "2026-06-30"
   },
   {
     "id": "t2",
     "projectId": "p1",
-    "assigneeId": 2,
+    "sprintId": "s1782817042519",
+    "num": 0,
     "title": "Design ticket board layout",
     "description": "Kanban columns with stub-style cards.",
     "status": "done",
     "priority": "high",
-    "reporterId": "r1782653437166"
+    "resourceId": "e1n7DJ8ThpI",
+    "storyPoints": 13,
+    "completedAt": "2026-06-30"
   },
   {
     "id": "t3",
     "projectId": "p1",
-    "assigneeId": 3,
+    "sprintId": "s1782817368113",
+    "num": 0,
     "title": "Wire up drag and drop",
     "description": "Move tickets between columns.",
     "status": "done",
     "priority": "urgent",
-    "reporterId": "r1782653437166"
+    "resourceId": null,
+    "storyPoints": 3,
+    "completedAt": "2026-06-30"
   },
   {
     "id": "t4",
     "projectId": "p1",
-    "assigneeId": 4,
+    "sprintId": null,
+    "num": 0,
     "title": "Add search and filtering",
     "description": "Filter board by title or assignee.",
     "status": "done",
     "priority": "medium",
-    "reporterId": "r1782653437166"
+    "resourceId": null,
+    "storyPoints": null,
+    "completedAt": null
   },
   {
     "id": "t5",
     "projectId": "p2",
-    "assigneeId": 1,
+    "sprintId": null,
+    "num": 0,
     "title": "Define auth endpoints",
     "description": "Spec login, refresh, logout.",
-    "status": "backlog",
+    "status": "done",
     "priority": "high",
-    "reporterId": "r1782653617709"
+    "resourceId": "e1n7DJ8ThpI",
+    "storyPoints": 5,
+    "completedAt": "2026-06-30"
   },
   {
     "id": "t6",
     "projectId": "p2",
-    "assigneeId": 2,
+    "sprintId": null,
+    "num": 0,
     "title": "Rate limiting middleware",
     "description": "Per-key throttling.",
     "status": "backlog",
     "priority": "medium",
-    "reporterId": "r1782653622637"
+    "resourceId": null,
+    "storyPoints": null,
+    "completedAt": null
   },
   {
     "id": "qGj5eSBRKl0",
     "projectId": "ceJaoUAjk1I",
-    "assigneeId": 3,
+    "sprintId": null,
+    "num": 0,
     "title": "Deployment Plan (spike)",
     "description": "Create a deployment plan in VM",
     "status": "backlog",
     "priority": "medium",
-    "reporterId": "hCLaVXGjyEk"
+    "resourceId": null,
+    "storyPoints": null,
+    "completedAt": null
   }
 ]

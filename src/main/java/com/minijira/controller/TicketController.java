@@ -27,11 +27,16 @@ public class TicketController {
      *   GET /tickets?projectId=p1
      *   GET /tickets?projectId=p1&status=done
      *   GET /tickets?resourceId=hCLaVXGjyEk
+     *   GET /tickets?sprintId=s1
      */
     @GetMapping
     public List<Ticket> getAll(@RequestParam(required = false) String projectId,
                                 @RequestParam(required = false) String status,
-                                @RequestParam(required = false) String resourceId) {
+                                @RequestParam(required = false) String resourceId,
+                                @RequestParam(required = false) String sprintId) {
+        if (sprintId != null) {
+            return ticketRepository.findBySprintId(sprintId);
+        }
         if (projectId != null && status != null) {
             return ticketRepository.findByProjectIdAndStatus(projectId, status);
         }
@@ -80,10 +85,17 @@ public class TicketController {
      * Partial update — handy for drag-and-drop, where you only want to send
      * the changed field (typically { "status": "in-progress" }) instead of
      * the whole ticket payload.
+     *
+     * completedAt is managed here rather than trusted from the client: it's
+     * stamped with today's date the moment status transitions into "done",
+     * and cleared if a ticket is moved back out of "done". This keeps
+     * velocity reporting accurate even if a client forgets to set it.
      */
     @PatchMapping("/{id}")
     public ResponseEntity<Ticket> patch(@PathVariable String id, @RequestBody Map<String, Object> updates) {
         return ticketRepository.findById(id).map(ticket -> {
+            String previousStatus = ticket.getStatus();
+
             if (updates.containsKey("status")) {
                 ticket.setStatus((String) updates.get("status"));
             }
@@ -102,6 +114,25 @@ public class TicketController {
             if (updates.containsKey("projectId")) {
                 ticket.setProjectId((String) updates.get("projectId"));
             }
+            if (updates.containsKey("sprintId")) {
+                ticket.setSprintId((String) updates.get("sprintId"));
+            }
+            if (updates.containsKey("storyPoints")) {
+                Object sp = updates.get("storyPoints");
+                ticket.setStoryPoints(sp == null ? null : ((Number) sp).intValue());
+            }
+            if (updates.containsKey("num")) {
+                ticket.setNum(((Number) updates.get("num")).intValue());
+            }
+
+            boolean movedToDone = "done".equals(ticket.getStatus()) && !"done".equals(previousStatus);
+            boolean movedOffDone = !"done".equals(ticket.getStatus()) && "done".equals(previousStatus);
+            if (movedToDone) {
+                ticket.setCompletedAt(java.time.LocalDate.now());
+            } else if (movedOffDone) {
+                ticket.setCompletedAt(null);
+            }
+
             return ResponseEntity.ok(ticketRepository.save(ticket));
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
