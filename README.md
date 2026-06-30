@@ -25,8 +25,25 @@ Or build a jar and run that:
 mvn clean package
 java -jar target/mini-jira-backend.jar
 ```
-
+### upload to server 
+scp -o "ProxyCommand=cloudflared access ssh --hostname %h" mini-jira-backend.jar rbl@terminal-ssh.customadsph.online:/home/rbl/bpi/mini-jira-back   
 The API comes up on **http://localhost:8080**.
+
+### access server
+ssh rbl@terminal-ssh.customadsph.online -o "ProxyCommand=cloudflared access ssh --hostname %h"
+
+### run app
+./run-jira.sh
+### check app log
+tail -f app.log
+
+### stop app
+pkill -f mini-jira-backend.jar
+### check app running
+ps aux | grep java
+
+
+
 
 On first run, `DataSeeder` inserts the same projects/resources/users/tickets
 you already had in `db.json`. After that it's a no-op (it checks if the

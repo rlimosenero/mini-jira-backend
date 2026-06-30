@@ -2,92 +2,171 @@
   {
     "id": "t1",
     "projectId": "p1",
-    "sprintId": "s1782817042519",
-    "num": 0,
+    "num": 1,
     "title": "Set up project skeleton",
     "description": "Bootstrap repo, linting, CI.",
     "status": "done",
-    "priority": "medium",
-    "resourceId": "e1n7DJ8ThpI",
-    "storyPoints": 5,
-    "completedAt": "2026-06-30"
+    "priority": "high",
+    "resourceId": "e1n7DJ8ThpI"
   },
   {
     "id": "t2",
     "projectId": "p1",
-    "sprintId": "s1782817042519",
-    "num": 0,
+    "num": 2,
     "title": "Design ticket board layout",
     "description": "Kanban columns with stub-style cards.",
     "status": "done",
     "priority": "high",
-    "resourceId": "e1n7DJ8ThpI",
-    "storyPoints": 13,
-    "completedAt": "2026-06-30"
+    "resourceId": "e1n7DJ8ThpI"
   },
   {
     "id": "t3",
     "projectId": "p1",
-    "sprintId": "s1782817368113",
-    "num": 0,
+    "num": 3,
     "title": "Wire up drag and drop",
     "description": "Move tickets between columns.",
     "status": "done",
     "priority": "urgent",
-    "resourceId": null,
-    "storyPoints": 3,
-    "completedAt": "2026-06-30"
+    "resourceId": "e1n7DJ8ThpI"
   },
   {
     "id": "t4",
     "projectId": "p1",
-    "sprintId": null,
-    "num": 0,
+    "num": 4,
     "title": "Add search and filtering",
     "description": "Filter board by title or assignee.",
     "status": "done",
     "priority": "medium",
-    "resourceId": null,
-    "storyPoints": null,
-    "completedAt": null
+    "resourceId": "e1n7DJ8ThpI"
   },
   {
     "id": "t5",
     "projectId": "p2",
-    "sprintId": null,
-    "num": 0,
+    "num": 1,
     "title": "Define auth endpoints",
     "description": "Spec login, refresh, logout.",
-    "status": "done",
-    "priority": "high",
-    "resourceId": "e1n7DJ8ThpI",
-    "storyPoints": 5,
-    "completedAt": "2026-06-30"
+    "status": "progress",
+    "priority": "medium",
+    "resourceId": "LcyJqvGn-1g"
   },
   {
     "id": "t6",
     "projectId": "p2",
-    "sprintId": null,
-    "num": 0,
+    "num": 2,
     "title": "Rate limiting middleware",
     "description": "Per-key throttling.",
-    "status": "backlog",
+    "status": "done",
     "priority": "medium",
-    "resourceId": null,
-    "storyPoints": null,
-    "completedAt": null
+    "resourceId": "e1n7DJ8ThpI"
   },
   {
     "id": "qGj5eSBRKl0",
     "projectId": "ceJaoUAjk1I",
-    "sprintId": null,
-    "num": 0,
+    "num": 1,
     "title": "Deployment Plan (spike)",
     "description": "Create a deployment plan in VM",
     "status": "backlog",
+    "priority": "high",
+    "resourceId": "hCLaVXGjyEk"
+  },
+  {
+    "id": "t1782724613853",
+    "projectId": "p1782724596208",
+    "num": 2,
+    "title": "test2",
+    "description": "",
+    "status": "backlog",
     "priority": "medium",
-    "resourceId": null,
-    "storyPoints": null,
-    "completedAt": null
+    "resourceId": null
+  },
+  {
+    "id": "t1782780721744",
+    "projectId": "p1782780575703",
+    "num": 1,
+    "title": "Kafka",
+    "description": "Kafka broker",
+    "status": "progress",
+    "priority": "medium",
+    "resourceId": "r1782780438144"
+  },
+  {
+    "id": "t1782780875899",
+    "projectId": "p1782780589691",
+    "num": 1,
+    "title": "Kafka remove",
+    "description": "",
+    "status": "backlog",
+    "priority": "medium",
+    "resourceId": "r1782780438144"
+  },
+  {
+    "id": "t1782780964565",
+    "projectId": "p1782780946326",
+    "num": 1,
+    "title": "Web services extract",
+    "description": "",
+    "status": "progress",
+    "priority": "medium",
+    "resourceId": "r1782780453006"
+  },
+  {
+    "id": "t1782786886835",
+    "projectId": "ceJaoUAjk1I",
+    "num": 2,
+    "title": "Meeting with IBM (June 29)",
+    "description": "",
+    "status": "done",
+    "priority": "medium",
+    "resourceId": null
+  },
+  {
+    "id": "t1782786970357",
+    "projectId": "p1",
+    "num": 5,
+    "title": "New meeting",
+    "description": "",
+    "status": "backlog",
+    "priority": "medium",
+    "resourceId": null
+  },
+  {
+    "id": "t1782788862779",
+    "projectId": "Ce-WiHiwT1Y",
+    "num": 1,
+    "title": "Prod deployment support",
+    "description": "",
+    "status": "backlog",
+    "priority": "medium",
+    "resourceId": "LcyJqvGn-1g"
+  },
+  {
+    "id": "t1782789033206",
+    "projectId": "p1782780946326",
+    "num": 2,
+    "title": "Piprline doc",
+    "description": "",
+    "status": "review",
+    "priority": "medium",
+    "resourceId": "r1782780453006"
+  },
+  {
+    "id": "t1782789120354",
+    "projectId": "p1782789106074",
+    "num": 1,
+    "title": "Bacoffice",
+    "description": "",
+    "status": "review",
+    "priority": "medium",
+    "resourceId": "r1782780463092"
+  },
+  {
+    "id": "t1782789165582",
+    "projectId": "p1782789106074",
+    "num": 2,
+    "title": "Capcha",
+    "description": "",
+    "status": "review",
+    "priority": "medium",
+    "resourceId": "r1782780476620"
   }
 ]

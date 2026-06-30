@@ -18,5 +18,35 @@
     "id": "Ce-WiHiwT1Y",
     "key": "GEN",
     "name": "GENOFC"
+  },
+  {
+    "id": "p1782780508437",
+    "key": "CAI",
+    "name": "Caishen"
+  },
+  {
+    "id": "p1782780521787",
+    "key": "DIS",
+    "name": "Disney"
+  },
+  {
+    "id": "p1782780575703",
+    "key": "SWI",
+    "name": "Swift"
+  },
+  {
+    "id": "p1782780589691",
+    "key": "BAR",
+    "name": "Barman"
+  },
+  {
+    "id": "p1782780946326",
+    "key": "WS",
+    "name": "WS"
+  },
+  {
+    "id": "p1782789106074",
+    "key": "F",
+    "name": "F1"
   }
 ]
