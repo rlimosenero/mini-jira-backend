@@ -1,0 +1,72 @@
+[
+  {
+    "id": "t1",
+    "projectId": "p1",
+    "assigneeId": 1,
+    "title": "Set up project skeleton",
+    "description": "Bootstrap repo, linting, CI.",
+    "status": "done",
+    "priority": "medium",
+    "reporterId": "r1782653437166"
+  },
+  {
+    "id": "t2",
+    "projectId": "p1",
+    "assigneeId": 2,
+    "title": "Design ticket board layout",
+    "description": "Kanban columns with stub-style cards.",
+    "status": "done",
+    "priority": "high",
+    "reporterId": "r1782653437166"
+  },
+  {
+    "id": "t3",
+    "projectId": "p1",
+    "assigneeId": 3,
+    "title": "Wire up drag and drop",
+    "description": "Move tickets between columns.",
+    "status": "done",
+    "priority": "urgent",
+    "reporterId": "r1782653437166"
+  },
+  {
+    "id": "t4",
+    "projectId": "p1",
+    "assigneeId": 4,
+    "title": "Add search and filtering",
+    "description": "Filter board by title or assignee.",
+    "status": "done",
+    "priority": "medium",
+    "reporterId": "r1782653437166"
+  },
+  {
+    "id": "t5",
+    "projectId": "p2",
+    "assigneeId": 1,
+    "title": "Define auth endpoints",
+    "description": "Spec login, refresh, logout.",
+    "status": "backlog",
+    "priority": "high",
+    "reporterId": "r1782653617709"
+  },
+  {
+    "id": "t6",
+    "projectId": "p2",
+    "assigneeId": 2,
+    "title": "Rate limiting middleware",
+    "description": "Per-key throttling.",
+    "status": "backlog",
+    "priority": "medium",
+    "reporterId": "r1782653622637"
+  },
+  {
+    "id": "qGj5eSBRKl0",
+    "projectId": "ceJaoUAjk1I",
+    "assigneeId": 3,
+    "title": "Deployment Plan (spike)",
+    "description": "Create a deployment plan in VM",
+    "status": "backlog",
+    "priority": "medium",
+    "reporterId": "hCLaVXGjyEk"
+  }
+]
