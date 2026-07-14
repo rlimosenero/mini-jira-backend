@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Flat/denormalized like the original json-server "tickets" collection:
@@ -64,4 +65,8 @@ public class Ticket {
     // set automatically when status transitions to "done"; used for velocity reporting
     @Column(name = "completed_at")
     private LocalDate completedAt;
+
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
 }

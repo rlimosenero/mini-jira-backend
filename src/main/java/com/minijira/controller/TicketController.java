@@ -1,6 +1,8 @@
 package com.minijira.controller;
 
 import com.minijira.model.Ticket;
+import com.minijira.model.TicketHistory;
+import com.minijira.repository.TicketHistoryRepository;
 import com.minijira.repository.TicketRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -16,10 +18,13 @@ import java.util.UUID;
 public class TicketController {
 
     private final TicketRepository ticketRepository;
+    private final TicketHistoryRepository historyRepo ;
 
-    public TicketController(TicketRepository ticketRepository) {
+    public TicketController(TicketRepository ticketRepository, TicketHistoryRepository historyRepo) {
         this.ticketRepository = ticketRepository;
+        this.historyRepo = historyRepo;
     }
+
 
     /**
      * Supports the same query-string filtering your Angular services already
@@ -79,6 +84,11 @@ public class TicketController {
         }
         ticket.setId(id);
         return ResponseEntity.ok(ticketRepository.save(ticket));
+    }
+
+    @GetMapping("/{id}/history")
+    public ResponseEntity<List<TicketHistory>> getHistory(@PathVariable String id) {
+        return ResponseEntity.ok(historyRepo.findByTicketIdOrderByChangedAtDesc(id));
     }
 
     /**

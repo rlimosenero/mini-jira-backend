@@ -29,6 +29,13 @@ java -jar target/mini-jira-backend.jar
 scp -o "ProxyCommand=cloudflared access ssh --hostname %h" mini-jira-backend.jar rbl@terminal-ssh.customadsph.online:/home/rbl/bpi/mini-jira-back   
 The API comes up on **http://localhost:8080**.
 
+### or use winscp
+- run in a separate terminal and keep open, if port is forbiden try other port
+
+cmd\>cloudflared access tcp --hostname terminal-ssh.customadsph.online --url localhost:222
+
+- use this localhost:222 in winscp login form
+
 ### access server
 ssh rbl@terminal-ssh.customadsph.online -o "ProxyCommand=cloudflared access ssh --hostname %h"
 
