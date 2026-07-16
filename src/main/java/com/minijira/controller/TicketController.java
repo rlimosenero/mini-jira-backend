@@ -7,6 +7,7 @@ import com.minijira.repository.TicketRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -65,6 +66,7 @@ public class TicketController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROJECT_MANAGER', 'DEVELOPER')")
     public ResponseEntity<Ticket> create(@Valid @RequestBody Ticket ticket) {
         if (ticket.getId() == null || ticket.getId().isBlank()) {
             ticket.setId(UUID.randomUUID().toString());
@@ -78,6 +80,7 @@ public class TicketController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROJECT_MANAGER', 'DEVELOPER')")
     public ResponseEntity<Ticket> update(@PathVariable String id, @Valid @RequestBody Ticket ticket) {
         if (!ticketRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
@@ -102,6 +105,7 @@ public class TicketController {
      * velocity reporting accurate even if a client forgets to set it.
      */
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROJECT_MANAGER', 'DEVELOPER')")
     public ResponseEntity<Ticket> patch(@PathVariable String id, @RequestBody Map<String, Object> updates) {
         return ticketRepository.findById(id).map(ticket -> {
             String previousStatus = ticket.getStatus();
@@ -148,6 +152,7 @@ public class TicketController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROJECT_MANAGER')")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         if (!ticketRepository.existsById(id)) {
             return ResponseEntity.notFound().build();

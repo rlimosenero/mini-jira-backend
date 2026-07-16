@@ -3,3 +3,7 @@
 /target/
 /.idea
 /data/
+/BACKEND-src.zip
+/app.log
+/minijira.mv.db
+/minijira.trace.db

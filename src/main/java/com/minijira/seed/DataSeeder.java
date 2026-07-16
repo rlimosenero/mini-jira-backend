@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.minijira.model.Project;
 import com.minijira.model.Resource;
+import com.minijira.model.Role;
 import com.minijira.model.Sprint;
 import com.minijira.model.Ticket;
 import com.minijira.model.User;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -37,6 +39,7 @@ public class DataSeeder implements CommandLineRunner {
     private final SprintRepository sprintRepository;
 
     private final ObjectMapper objectMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${app.seed.enabled}")
     private boolean seedEnabled;
@@ -82,6 +85,27 @@ public class DataSeeder implements CommandLineRunner {
 
     private void seedUsers(String filePath) throws Exception {
         List<User> list = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
+        
+        // Hash passwords and assign roles based on username for demo purposes
+        for (User user : list) {
+            // Hash the password using BCrypt
+            if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+            }
+            
+            // Assign roles based on username for demo purposes
+            if (user.getRole() == null) {
+                if ("admin".equalsIgnoreCase(user.getUsername())) {
+                    user.setRole(Role.ADMIN);
+                } else if ("pm".equalsIgnoreCase(user.getUsername()) || user.getUsername().contains("manager")) {
+                    user.setRole(Role.PROJECT_MANAGER);
+                } else if ("dev".equalsIgnoreCase(user.getUsername()) || user.getUsername().contains("developer")) {
+                    user.setRole(Role.DEVELOPER);
+                } else {
+                    user.setRole(Role.VIEWER);
+                }
+            }
+        }
         userRepository.saveAll(list);
     }
 

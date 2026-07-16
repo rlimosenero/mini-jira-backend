@@ -5,6 +5,7 @@ import com.minijira.repository.ResourceRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class ResourceController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROJECT_MANAGER')")
     public ResponseEntity<Resource> create(@Valid @RequestBody Resource resource) {
         if (resource.getId() == null || resource.getId().isBlank()) {
             resource.setId(UUID.randomUUID().toString());
@@ -42,6 +44,7 @@ public class ResourceController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROJECT_MANAGER')")
     public ResponseEntity<Resource> update(@PathVariable String id, @Valid @RequestBody Resource resource) {
         if (!resourceRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
@@ -51,6 +54,7 @@ public class ResourceController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         if (!resourceRepository.existsById(id)) {
             return ResponseEntity.notFound().build();

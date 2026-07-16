@@ -5,6 +5,7 @@ import com.minijira.repository.SprintRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,6 +41,7 @@ public class SprintController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROJECT_MANAGER')")
     public ResponseEntity<Sprint> create(@Valid @RequestBody Sprint sprint) {
         if (sprint.getId() == null || sprint.getId().isBlank()) {
             sprint.setId(UUID.randomUUID().toString());
@@ -49,6 +51,7 @@ public class SprintController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROJECT_MANAGER')")
     public ResponseEntity<Sprint> update(@PathVariable String id, @Valid @RequestBody Sprint sprint) {
         if (!sprintRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
@@ -58,6 +61,7 @@ public class SprintController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         if (!sprintRepository.existsById(id)) {
             return ResponseEntity.notFound().build();

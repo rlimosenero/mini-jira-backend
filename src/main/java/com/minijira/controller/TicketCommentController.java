@@ -7,6 +7,7 @@ import com.minijira.model.TicketCommentResponse;
 import com.minijira.repository.TicketCommentRepository;
 import com.minijira.repository.TicketRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -42,6 +43,7 @@ public class TicketCommentController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROJECT_MANAGER', 'DEVELOPER', 'VIEWER')")
     public TicketCommentResponse create(
             @PathVariable String ticketId,
             @RequestBody CreateTicketCommentRequest request

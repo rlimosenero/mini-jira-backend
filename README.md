@@ -9,8 +9,9 @@ URL.
 
 - Spring Boot 3.3 (Java 17)
 - Spring Data JPA
+- Spring Security + JWT authentication
 - H2, file-based (`./data/minijira.mv.db`) — data survives restarts
-- No auth yet (see `UserController` notes below)
+- BCrypt password hashing
 
 ## Run it
 
@@ -25,32 +26,47 @@ Or build a jar and run that:
 mvn clean package
 java -jar target/mini-jira-backend.jar
 ```
-### upload to server 
-scp -o "ProxyCommand=cloudflared access ssh --hostname %h" mini-jira-backend.jar rbl@terminal-ssh.customadsph.online:/home/rbl/bpi/mini-jira-back   
-The API comes up on **http://localhost:8080**.
 
-### or use winscp
-- run in a separate terminal and keep open, if port is forbiden try other port
+### Upload to server 
+```bash
+scp -o "ProxyCommand=cloudflared access ssh --hostname %h" mini-jira-backend.jar rbl@terminal-ssh.customadsph.online:/home/rbl/bpi/mini-jira-back
+```
 
-cmd\>cloudflared access tcp --hostname terminal-ssh.customadsph.online --url localhost:222
+### Or use WinSCP
+- Run in a separate terminal and keep open (if port is forbidden try another port)
 
-- use this localhost:222 in winscp login form
+```bash
+cloudflared access tcp --hostname terminal-ssh.customadsph.online --url localhost:222
+```
 
-### access server
+- Use this `localhost:222` in WinSCP login form
+
+### Access server
+```bash
 ssh rbl@terminal-ssh.customadsph.online -o "ProxyCommand=cloudflared access ssh --hostname %h"
+```
 
-### run app
+### Run app
+```bash
 ./run-jira.sh
-### check app log
+```
+
+### Check app log
+```bash
 tail -f app.log
+```
 
-### stop app
+### Stop app
+```bash
 pkill -f mini-jira-backend.jar
-### check app running
+```
+
+### Check app running
+```bash
 ps aux | grep java
+```
 
-
-
+The API comes up on **http://localhost:8080**.
 
 On first run, `DataSeeder` inserts the same projects/resources/users/tickets
 you already had in `db.json`. After that it's a no-op (it checks if the
@@ -59,14 +75,91 @@ you already had in `db.json`. After that it's a no-op (it checks if the
 H2 console (handy for poking at the data directly): http://localhost:8080/h2-console
 JDBC URL: `jdbc:h2:file:./data/minijira`, user `sa`, no password.
 
+## Authentication & Authorization
+
+### JWT Tokens
+- All protected endpoints require a valid JWT token in the `Authorization` header
+- Format: `Authorization: Bearer <token>`
+
+### Roles
+- **ADMIN** - Full access, can delete projects/users
+- **PROJECT_MANAGER** - Can create/update projects, sprints, resources; delete tickets
+- **DEVELOPER** - Can create/update/patch tickets, leave comments
+- **VIEWER** - Read-only access, can comment on tickets
+
+### Endpoints
+
+| Endpoint | Method | Requires | Purpose |
+|---|---|---|---|
+| `/auth/login` | POST | None | Login with username/password, get JWT token |
+| `/auth/register` | POST | None | Register new user (defaults to VIEWER role) |
+| `/users/by-role/{role}` | GET | ADMIN | Get all users with a specific role |
+
+### Test the Authentication
+
+**1. Register a new user:**
+```bash
+curl -X POST http://localhost:8080/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"username": "testuser", "password": "password123"}'
+```
+
+Response:
+```json
+{
+  "token": "eyJhbGciOiJIUzUxMiJ9...",
+  "userId": "550e8400-e29b-41d4-a716-446655440000",
+  "username": "testuser",
+  "role": "VIEWER"
+}
+```
+
+**2. Login with existing user (from seed data):**
+```bash
+curl -X POST http://localhost:8080/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": "admin", "password": "admin"}'
+```
+
+**3. Use the token to access protected endpoints:**
+```bash
+# Get all projects (requires authentication)
+curl -X GET http://localhost:8080/projects \
+  -H "Authorization: Bearer <your_token_here>"
+
+# Create a new project (requires PROJECT_MANAGER or ADMIN)
+curl -X POST http://localhost:8080/projects \
+  -H "Authorization: Bearer <your_token_here>" \
+  -H "Content-Type: application/json" \
+  -d '{"id":"p999","key":"TEST","name":"Test Project","description":"A test project"}'
+
+# Create a ticket (requires DEVELOPER, PROJECT_MANAGER, or ADMIN)
+curl -X POST http://localhost:8080/tickets \
+  -H "Authorization: Bearer <your_token_here>" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"New ticket","projectId":"p1","status":"todo","priority":"medium"}'
+```
+
+### Default Test Users (from seed data)
+
+| Username | Password | Role |
+|---|---|---|
+| admin | admin | ADMIN |
+| pm | pm | PROJECT_MANAGER |
+| dev | dev | DEVELOPER |
+| Other | N/A | VIEWER |
+
 ## Endpoints
 
 | Resource | Routes |
 |---|---|
+| Auth | `POST /auth/login`, `POST /auth/register` |
 | Projects | `GET/POST /projects`, `GET/PUT/DELETE /projects/{id}` |
 | Resources | `GET/POST /resources`, `GET/PUT/DELETE /resources/{id}` |
-| Users | `GET/POST /users`, `GET/PUT/DELETE /users/{id}` |
+| Users | `GET/POST /users`, `GET/PUT/DELETE /users/{id}`, `GET /users/by-role/{role}` |
 | Tickets | `GET/POST /tickets`, `GET/PUT/PATCH/DELETE /tickets/{id}` |
+| Sprints | `GET/POST /sprints`, `GET/PUT/DELETE /sprints/{id}` |
+| Comments | `GET /tickets/{ticketId}/comments`, `POST /tickets/{ticketId}/comments` |
 
 **Filtering** (matches what you were already doing against json-server):
 
@@ -74,34 +167,51 @@ JDBC URL: `jdbc:h2:file:./data/minijira`, user `sa`, no password.
 GET /tickets?projectId=p1
 GET /tickets?projectId=p1&status=done
 GET /tickets?resourceId=hCLaVXGjyEk
-GET /users?username=admin&password=admin   <- your existing "login" call still works
+GET /sprints?projectId=p1
 ```
 
-**Partial ticket updates** (new — useful for drag-and-drop status changes,
-so you don't have to PUT the whole ticket):
+**Partial ticket updates** (useful for drag-and-drop status changes):
 
 ```
 PATCH /tickets/{id}
 Body: { "status": "in-progress" }
+Authorization: Bearer <token>
 ```
+
+## Role-Based Access Control (RBAC)
+
+### Create/Update Operations
+- **Projects**: PROJECT_MANAGER | ADMIN
+- **Tickets**: DEVELOPER | PROJECT_MANAGER | ADMIN
+- **Sprints**: PROJECT_MANAGER | ADMIN
+- **Resources**: PROJECT_MANAGER | ADMIN
+- **Comments**: DEVELOPER | PROJECT_MANAGER | ADMIN | VIEWER
+
+### Delete Operations
+- **Projects**: ADMIN only
+- **Tickets**: PROJECT_MANAGER | ADMIN
+- **Sprints**: ADMIN only
+- **Resources**: ADMIN only
+- **Users**: ADMIN only
+
+### Read Operations
+- All roles can read (GET requests are not restricted)
 
 ## What's different from json-server (worth knowing)
 
-1. **`key` on Project** is mapped to a `project_key` column under the hood
+1. **Authentication required** - Most endpoints now require a JWT token (except `/auth/*`)
+2. **Role-based access** - Write/delete operations are restricted by user role
+3. **Password hashing** - All passwords are stored as BCrypt hashes, never plaintext
+4. **`key` on Project** is mapped to a `project_key` column under the hood
    (KEY is a reserved SQL word), but the JSON field is still `"key"` — no
    frontend change needed.
-2. **New IDs** are generated as UUIDs on `POST` if you don't supply one,
+5. **New IDs** are generated as UUIDs on `POST` if you don't supply one,
    instead of nanoid-style strings. Doesn't affect anything unless your
    frontend assumes a specific ID format/length.
-3. **Tickets are flat/denormalized** (`projectId`, `resourceId` as plain
+6. **Tickets are flat/denormalized** (`projectId`, `resourceId` as plain
    strings, not JPA relations) — same as json-server. If you later want
    the DB to enforce that a ticket's `projectId` actually exists, swap
    these for `@ManyToOne` relations.
-4. **No auth.** The `/users?username=&password=` route is left in only to
-   match what your Angular app already calls — it's not secure (it both
-   accepts and returns plaintext passwords, with no token/session issued).
-   When you're ready, swap this for Spring Security + JWT and protect the
-   other endpoints behind it.
 
 ## Connecting your Angular app
 
@@ -113,9 +223,38 @@ export const environment = {
 };
 ```
 
+### Update your auth service to use JWT
+
+```typescript
+// auth.service.ts
+login(username: string, password: string) {
+  return this.http.post(`${this.apiUrl}/auth/login`, {
+    username,
+    password
+  }).pipe(
+    tap((response: any) => {
+      localStorage.setItem('token', response.token);
+      localStorage.setItem('userId', response.userId);
+      localStorage.setItem('role', response.role);
+    })
+  );
+}
+
+// Add token to all HTTP requests
+// In your HTTP interceptor:
+intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  const token = localStorage.getItem('token');
+  if (token) {
+    req = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  }
+  return next.handle(req);
+}
+```
+
 Your services that already call `/projects`, `/resources`, `/users`,
-`/tickets` should work unchanged. If you were tunneling json-server through
-ngrok, you can do the same with this backend — `ngrok http 8080` — and you
-won't need the `ngrok-skip-browser-warning` header workaround for *this*
-server unless you tunnel it too (that header only matters when hitting an
-ngrok-fronted endpoint from a browser-style request).
+`/tickets` should work unchanged. Just make sure your HTTP interceptor
+adds the JWT token to the `Authorization` header for all requests.
