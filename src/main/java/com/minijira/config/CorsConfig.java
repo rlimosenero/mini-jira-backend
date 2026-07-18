@@ -17,10 +17,11 @@ public class CorsConfig {
         CorsConfiguration config =
                 new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of(
-                        "http://localhost:4200",
-                        "https://*.netlify.app",
-                        "https://*.ngrok-free.app"
+        config.setAllowedOriginPatterns(List.of(
+                "http://localhost:*",
+                "https://*.netlify.app",
+                "https://*.ngrok-free.app",
+                "https://z500-sb.customadsph.com"
         ));
 
         config.setAllowedMethods(List.of(
