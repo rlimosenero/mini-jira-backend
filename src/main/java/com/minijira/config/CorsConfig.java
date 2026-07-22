@@ -21,7 +21,8 @@ public class CorsConfig {
                 "http://localhost:*",
                 "https://*.netlify.app",
                 "https://*.ngrok-free.app",
-                "https://z500-sb.customadsph.com"
+                "https://*.customadsph.com",
+                "https://customadsph.com"
         ));
 
         config.setAllowedMethods(List.of(
